@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+#
+# tmux-ls - Mission Control for tmux
+# Main executable entry point
+#
+# Version: 0.1.0-dev
+# Repository: https://github.com/waystid/tmux-ls
+
+set -euo pipefail
+
+# Determine script directory for library loading
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIB_DIR="${SCRIPT_DIR}/../lib"
+
+# Version information
+VERSION="0.1.0-dev"
+
+# Display help message
+show_help() {
+    cat <<EOF
+tmux-ls - Mission Control for tmux
+
+USAGE:
+    tmux-ls [OPTIONS]
+
+OPTIONS:
+    -h, --help      Display this help message
+    -v, --version   Display version information
+
+DESCRIPTION:
+    Interactive terminal UI for managing tmux sessions. Features include:
+
+    - Session listing and quick attachment
+    - Quick switcher for in-tmux context switching
+    - Multi-session workspace creation
+    - Session lifecycle management
+    - Configuration and customization
+
+EXAMPLES:
+    # Launch interactive session manager
+    tmux-ls
+
+    # Quick switcher (when inside tmux)
+    tmux-ls
+
+    # Display version
+    tmux-ls --version
+
+CONFIGURATION:
+    Config file: ~/.config/tmux-ls/config.yml
+
+    To initialize default configuration:
+        tmux-ls config init
+
+DOCUMENTATION:
+    Repository: https://github.com/waystid/tmux-ls
+    Issues:     https://github.com/waystid/tmux-ls/issues
+
+LICENSE:
+    MIT License - Copyright (c) 2025 waystid
+EOF
+}
+
+# Display version information
+show_version() {
+    cat <<EOF
+tmux-ls version ${VERSION}
+
+Repository: https://github.com/waystid/tmux-ls
+License:    MIT
+EOF
+}
+
+# Main entry point
+main() {
+    # Parse command line arguments
+    case "${1:-}" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -v|--version)
+            show_version
+            exit 0
+            ;;
+        "")
+            # TODO: Launch interactive UI
+            echo "tmux-ls ${VERSION} - Interactive mode coming soon!"
+            echo "Run 'tmux-ls --help' for usage information"
+            exit 0
+            ;;
+        *)
+            echo "Error: Unknown option '${1}'" >&2
+            echo "Run 'tmux-ls --help' for usage information" >&2
+            exit 1
+            ;;
+    esac
+}
+
+# Execute main function with all arguments
+main "$@"

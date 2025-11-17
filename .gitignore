@@ -1,0 +1,36 @@
+# Compiled binaries
+*.o
+*.so
+*.dylib
+
+# Test artifacts
+tests/tmp/
+tests/coverage/
+*.log
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Local development
+.env
+.env.local
+
+# Telemetry database (for local testing)
+*.db
+*.sqlite
+
+# Homebrew build
+homebrew/bottles/
