@@ -28,14 +28,14 @@ Based on plan.md structure (single CLI application):
 
 **Purpose**: Project initialization and basic bash script structure
 
-- [ ] T001 Create project directory structure: `tmux-ls/` with subdirectories `bin/`, `lib/`, `tests/`, `docs/`, `homebrew/`
-- [ ] T002 Create `lib/` subdirectories: `core/`, `ui/`, `actions/`, `telemetry/`, `utils/`
-- [ ] T003 Create `tests/` subdirectories: `unit/`, `integration/`, `fixtures/`
-- [ ] T004 [P] Initialize VERSION file with `1.0.0` at repository root
-- [ ] T005 [P] Create .gitignore for bash project (ignore `*.swp`, `*.bak`, `.DS_Store`)
-- [ ] T006 [P] Create LICENSE file (MIT or preferred license)
-- [ ] T007 [P] Setup GitHub Actions CI workflow in `.github/workflows/ci.yml` with BATS on macOS/Ubuntu matrix, shellcheck linting (fail on errors), and parallel job execution
-- [ ] T008 [P] Create test fixtures directory `tests/fixtures/` with sample_sessions.txt and test_config.yml
+- [X] T001 Create project directory structure: `tmux-ls/` with subdirectories `bin/`, `lib/`, `tests/`, `docs/`, `homebrew/`
+- [X] T002 Create `lib/` subdirectories: `core/`, `ui/`, `actions/`, `telemetry/`, `utils/`
+- [X] T003 Create `tests/` subdirectories: `unit/`, `integration/`, `fixtures/`
+- [X] T004 [P] Initialize VERSION file with `1.0.0` at repository root
+- [X] T005 [P] Create .gitignore for bash project (ignore `*.swp`, `*.bak`, `.DS_Store`)
+- [X] T006 [P] Create LICENSE file (MIT or preferred license)
+- [X] T007 [P] Setup GitHub Actions CI workflow in `.github/workflows/ci.yml` with BATS on macOS/Ubuntu matrix, shellcheck linting (fail on errors), and parallel job execution
+- [X] T008 [P] Create test fixtures directory `tests/fixtures/` with sample_sessions.txt and test_config.yml
 
 ---
 
