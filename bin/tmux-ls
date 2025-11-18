@@ -12,8 +12,32 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="${SCRIPT_DIR}/../lib"
 
-# Version information
-VERSION="0.1.0-dev"
+# Read version from VERSION file
+VERSION_FILE="${SCRIPT_DIR}/../VERSION"
+if [[ -f "$VERSION_FILE" ]]; then
+    VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+else
+    VERSION="0.1.0-dev"
+fi
+
+# Load foundational libraries
+# shellcheck source=lib/utils/error.sh
+source "$LIB_DIR/utils/error.sh"
+# shellcheck source=lib/utils/platform.sh
+source "$LIB_DIR/utils/platform.sh"
+# shellcheck source=lib/utils/tmux-check.sh
+source "$LIB_DIR/utils/tmux-check.sh"
+# shellcheck source=lib/utils/validation.sh
+source "$LIB_DIR/utils/validation.sh"
+# shellcheck source=lib/ui/theme.sh
+source "$LIB_DIR/ui/theme.sh"
+# shellcheck source=lib/ui/prompts.sh
+source "$LIB_DIR/ui/prompts.sh"
+
+# Global flags
+CONFIG_FILE=""
+DEBUG_MODE=false
+NO_COLOR_MODE=false
 
 # Display help message
 show_help() {
@@ -24,8 +48,11 @@ USAGE:
     tmux-ls [OPTIONS]
 
 OPTIONS:
-    -h, --help      Display this help message
-    -v, --version   Display version information
+    -h, --help              Display this help message
+    -v, --version           Display version information
+    -c, --config FILE       Use alternate configuration file
+    -d, --debug             Enable debug output to stderr
+    --no-color              Disable colored output
 
 DESCRIPTION:
     Interactive terminal UI for managing tmux sessions. Features include:
@@ -63,38 +90,119 @@ EOF
 
 # Display version information
 show_version() {
+    local platform
+    local bash_version
+    local tmux_version
+
+    platform=$(detect_platform)
+    bash_version=$(get_bash_version)
+
+    if is_tmux_installed; then
+        tmux_version=$(get_tmux_version)
+    else
+        tmux_version="not installed"
+    fi
+
     cat <<EOF
 tmux-ls version ${VERSION}
+
+Platform:   ${platform} ($(get_architecture))
+Bash:       ${bash_version}
+tmux:       ${tmux_version}
 
 Repository: https://github.com/waystid/tmux-ls
 License:    MIT
 EOF
 }
 
-# Main entry point
-main() {
-    # Parse command line arguments
-    case "${1:-}" in
-        -h|--help)
-            show_help
-            exit 0
+# Parse command line arguments
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -v|--version)
+                show_version
+                exit 0
+                ;;
+            -c|--config)
+                CONFIG_FILE="$2"
+                shift 2
+                ;;
+            -d|--debug)
+                DEBUG_MODE=true
+                export DEBUG=1
+                shift
+                ;;
+            --no-color)
+                NO_COLOR_MODE=true
+                export NO_COLOR=1
+                export TMUX_LS_NO_COLOR=1
+                shift
+                ;;
+            -*)
+                fatal "Unknown option: $1" "$EXIT_INVALID_USAGE"
+                ;;
+            *)
+                # No positional arguments supported yet
+                fatal "Unexpected argument: $1" "$EXIT_INVALID_USAGE"
+                ;;
+        esac
+    done
+}
+
+# Validate environment
+validate_environment() {
+    debug "Validating environment..."
+
+    # Check platform compatibility
+    if ! validate_platform; then
+        exit "$EXIT_GENERAL_ERROR"
+    fi
+
+    # Check tmux availability
+    local tmux_check_result
+    validate_tmux
+    tmux_check_result=$?
+
+    case $tmux_check_result in
+        0)
+            debug "tmux validated successfully"
             ;;
-        -v|--version)
-            show_version
-            exit 0
+        1)
+            # Fatal error (tmux not installed or too old)
+            exit "$EXIT_TMUX_NOT_FOUND"
             ;;
-        "")
-            # TODO: Launch interactive UI
-            echo "tmux-ls ${VERSION} - Interactive mode coming soon!"
-            echo "Run 'tmux-ls --help' for usage information"
-            exit 0
-            ;;
-        *)
-            echo "Error: Unknown option '${1}'" >&2
-            echo "Run 'tmux-ls --help' for usage information" >&2
-            exit 1
+        2)
+            # Warning (server not running)
+            debug "tmux server not running (will be handled by UI)"
             ;;
     esac
+
+    debug "Environment validation complete"
+}
+
+# Main entry point
+main() {
+    # Parse arguments
+    parse_args "$@"
+
+    # Validate environment
+    validate_environment
+
+    # TODO: Launch interactive UI based on context
+    if is_inside_tmux; then
+        debug "Inside tmux session: $(get_current_session)"
+        info "Quick switcher mode - coming soon!"
+    else
+        debug "Outside tmux - standard mode"
+        info "Interactive session manager - coming soon!"
+    fi
+
+    success "tmux-ls ${VERSION} initialized successfully"
+    echo "Run 'tmux-ls --help' for usage information"
 }
 
 # Execute main function with all arguments
