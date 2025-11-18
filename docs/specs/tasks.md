@@ -45,16 +45,16 @@ Based on plan.md structure (single CLI application):
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Implement platform detection in `lib/utils/platform.sh` (macOS vs Linux, bash version check)
-- [ ] T010 [P] Implement tmux availability check in `lib/utils/tmux-check.sh` (check tmux installed, version >= 2.6, server running)
-- [ ] T011 [P] Implement input validation functions in `lib/utils/validation.sh` (validate_session_name, validate_hex_color)
-- [ ] T012 [P] Implement error handling framework in `lib/utils/error.sh` (error_handler trap, exit codes, stderr formatting)
-- [ ] T013 [P] Create gum wrapper functions in `lib/ui/prompts.sh` (check_gum_available, fallback to bash select)
-- [ ] T014 [P] Implement color/theme system in `lib/ui/theme.sh` (ANSI codes, configurable colors, --no-color support)
-- [ ] T015 Create main entry point `bin/tmux-ls` with argument parsing (--version, --help, --config, --debug, --no-color)
-- [ ] T016 [P] Write unit test for platform detection in `tests/unit/test_platform.bats`
-- [ ] T017 [P] Write unit test for validation functions in `tests/unit/test_validation.bats`
-- [ ] T017b [P] Write unit test for --version and --help output format in `tests/unit/test_cli_flags.bats` (validate version string format, help message structure, exit codes)
+- [X] T009 Implement platform detection in `lib/utils/platform.sh` (macOS vs Linux, bash version check)
+- [X] T010 [P] Implement tmux availability check in `lib/utils/tmux-check.sh` (check tmux installed, version >= 2.6, server running)
+- [X] T011 [P] Implement input validation functions in `lib/utils/validation.sh` (validate_session_name, validate_hex_color)
+- [X] T012 [P] Implement error handling framework in `lib/utils/error.sh` (error_handler trap, exit codes, stderr formatting)
+- [X] T013 [P] Create gum wrapper functions in `lib/ui/prompts.sh` (check_gum_available, fallback to bash select)
+- [X] T014 [P] Implement color/theme system in `lib/ui/theme.sh` (ANSI codes, configurable colors, --no-color support)
+- [X] T015 Create main entry point `bin/tmux-ls` with argument parsing (--version, --help, --config, --debug, --no-color)
+- [X] T016 [P] Write unit test for platform detection in `tests/unit/test_platform.bats`
+- [X] T017 [P] Write unit test for validation functions in `tests/unit/test_validation.bats`
+- [X] T017b [P] Write unit test for --version and --help output format in `tests/unit/test_cli_flags.bats` (validate version string format, help message structure, exit codes)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

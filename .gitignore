@@ -6,6 +6,8 @@
 # Test artifacts
 tests/tmp/
 tests/coverage/
+tests/test_helper/bats-support/
+tests/test_helper/bats-assert/
 *.log
 
 # macOS
