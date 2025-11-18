@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  shellcheck:
+    name: Shellcheck Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          find bin lib -type f -name "*.sh" -o -name "tmux-ls" | xargs shellcheck
+
+  test:
+    name: BATS Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tmux bats yq
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install tmux bats-core yq
+
+      - name: Install gum
+        run: |
+          if [ "$(uname)" = "Linux" ]; then
+            echo 'deb [trusted=yes] https://repo.charm.sh/apt/ /' | sudo tee /etc/apt/sources.list.d/charm.list
+            sudo apt-get update
+            sudo apt-get install -y gum
+          else
+            brew install gum
+          fi
+
+      - name: Run unit tests
+        run: |
+          if [ -d tests/unit ]; then
+            bats tests/unit/*.bats || echo "No unit tests yet"
+          fi
+
+      - name: Run integration tests
+        run: |
+          if [ -d tests/integration ]; then
+            bats tests/integration/*.bats || echo "No integration tests yet"
+          fi

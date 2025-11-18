@@ -1,0 +1,7 @@
+# Sample tmux list-sessions output for testing
+# Format: session_name|windows|created|attached|activity
+dev-api|3|1700000000|1|1700001234
+staging|1|1699999999|0|1700000500
+project-frontend|5|1699998888|2|1700002000
+old-session|1|1699900000|0|1699950000
+workspace-demo|4|1700005000|1|1700005500

@@ -1,0 +1,29 @@
+# Test configuration file for tmux-ls
+# Used in unit and integration tests
+
+ui:
+  colors:
+    active: "#00FF00"
+    inactive: "#808080"
+    warning: "#FFFF00"
+    error: "#FF0000"
+  theme: "default"
+  use_emojis: true
+
+workspace:
+  default_layout: "grid"
+  max_sessions: 4
+  min_sessions: 2
+
+cleanup:
+  stale_threshold_minutes: 30
+  require_confirmation: true
+
+telemetry:
+  enabled: false
+  database_path: "~/.local/share/tmux-ls/telemetry.db"
+
+# Test-specific overrides
+test:
+  mock_tmux: true
+  fixture_path: "tests/fixtures/sample_sessions.txt"
